@@ -45,8 +45,6 @@ const claimFaucet = async (address, proxies) => {
   let attempt = 0;
   let currentProxy = getRandomProxy(proxies);
 
-  await new Promise((resolve) => setTimeout(resolve, 30000));
-
   while (attempt < maxRetries) {
     try {
       const axiosConfig = {
@@ -80,6 +78,7 @@ const claimFaucet = async (address, proxies) => {
       }
 
       const response = await axios(axiosConfig);
+
       log.info(`Claim successful for ${address}:`, response.data);
       return;
     } catch (error) {
@@ -117,7 +116,7 @@ const main = async () => {
     return;
   }
 
-  const tasks = wallets.map((wallet) => {
+  const tasks = wallets.map(async (wallet) => {
     if (proxies.length > 0) {
       log.info(`Starting claim process for wallet: ${wallet.address}`);
     } else {
@@ -125,7 +124,7 @@ const main = async () => {
         `No proxies available for wallet: ${wallet.address}. Proceeding without a proxy.`
       );
     }
-
+    await new Promise((resolve) => setTimeout(resolve, 30000));
     return claimFaucet(wallet.address, proxies);
   });
 
