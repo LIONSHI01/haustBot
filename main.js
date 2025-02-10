@@ -124,6 +124,7 @@ const main = async () => {
         `No proxies available for wallet: ${wallet.address}. Proceeding without a proxy.`
       );
     }
+    log.info("Wait 30 seconds ...");
     await new Promise((resolve) => setTimeout(resolve, 30000));
     return claimFaucet(wallet.address, proxies);
   });
